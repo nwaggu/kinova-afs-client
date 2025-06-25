@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/kortex_driver/include/kortex_driver/ConfigurationChangeNotification_configuration_change.h

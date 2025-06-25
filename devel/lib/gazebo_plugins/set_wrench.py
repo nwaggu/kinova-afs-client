@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gazebo_plugins/lib/gazebo_plugins/set_wrench.py

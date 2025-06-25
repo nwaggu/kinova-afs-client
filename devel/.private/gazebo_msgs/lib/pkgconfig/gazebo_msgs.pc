@@ -1,0 +1,8 @@
+prefix=/home/sharer/official_kortex_prime/devel/.private/gazebo_msgs
+
+Name: gazebo_msgs
+Description: Description of gazebo_msgs
+Version: 2.9.3
+Cflags: -I/home/sharer/official_kortex_prime/devel/.private/gazebo_msgs/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime std_msgs trajectory_msgs geometry_msgs sensor_msgs std_srvs

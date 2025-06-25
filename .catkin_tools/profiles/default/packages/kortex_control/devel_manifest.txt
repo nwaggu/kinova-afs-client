@@ -1,0 +1,4 @@
+ros_kortex/kortex_control
+/home/sharer/official_kortex_prime/devel/.private/kortex_control/share/kortex_control/cmake/kortex_controlConfig.cmake /home/sharer/official_kortex_prime/devel/share/kortex_control/cmake/kortex_controlConfig.cmake
+/home/sharer/official_kortex_prime/devel/.private/kortex_control/share/kortex_control/cmake/kortex_controlConfig-version.cmake /home/sharer/official_kortex_prime/devel/share/kortex_control/cmake/kortex_controlConfig-version.cmake
+/home/sharer/official_kortex_prime/devel/.private/kortex_control/lib/pkgconfig/kortex_control.pc /home/sharer/official_kortex_prime/devel/lib/pkgconfig/kortex_control.pc

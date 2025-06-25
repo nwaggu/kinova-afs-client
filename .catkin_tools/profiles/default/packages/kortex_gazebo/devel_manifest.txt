@@ -1,0 +1,4 @@
+ros_kortex/kortex_gazebo
+/home/sharer/official_kortex_prime/devel/.private/kortex_gazebo/share/kortex_gazebo/cmake/kortex_gazeboConfig-version.cmake /home/sharer/official_kortex_prime/devel/share/kortex_gazebo/cmake/kortex_gazeboConfig-version.cmake
+/home/sharer/official_kortex_prime/devel/.private/kortex_gazebo/share/kortex_gazebo/cmake/kortex_gazeboConfig.cmake /home/sharer/official_kortex_prime/devel/share/kortex_gazebo/cmake/kortex_gazeboConfig.cmake
+/home/sharer/official_kortex_prime/devel/.private/kortex_gazebo/lib/pkgconfig/kortex_gazebo.pc /home/sharer/official_kortex_prime/devel/lib/pkgconfig/kortex_gazebo.pc

@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/kortex_driver/lib/python3/dist-packages/kortex_driver/msg/_Waypoint_type_of_waypoint.py

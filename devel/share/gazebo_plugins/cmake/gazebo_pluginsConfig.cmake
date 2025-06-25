@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gazebo_plugins/share/gazebo_plugins/cmake/gazebo_pluginsConfig.cmake

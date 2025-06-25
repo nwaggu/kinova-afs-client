@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/kortex_examples/share/kortex_examples/cmake/kortex_examplesConfig.cmake

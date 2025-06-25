@@ -1,0 +1,5 @@
+Symlinking /home/sharer/official_kortex_prime/devel/share/roboticsgroup_upatras_gazebo_plugins/cmake/roboticsgroup_upatras_gazebo_pluginsConfig.cmake
+Symlinking /home/sharer/official_kortex_prime/devel/share/roboticsgroup_upatras_gazebo_plugins/cmake/roboticsgroup_upatras_gazebo_pluginsConfig-version.cmake
+Symlinking /home/sharer/official_kortex_prime/devel/lib/libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so
+Symlinking /home/sharer/official_kortex_prime/devel/lib/libroboticsgroup_upatras_gazebo_disable_link_plugin.so
+Symlinking /home/sharer/official_kortex_prime/devel/lib/pkgconfig/roboticsgroup_upatras_gazebo_plugins.pc

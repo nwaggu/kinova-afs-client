@@ -1,0 +1,55 @@
+CONAN_TARGET_PLATFORM is x86
+[36m--[0m Using CATKIN_DEVEL_PREFIX: /home/sharer/official_kortex_prime/devel/.private/kortex_driver
+[36m--[0m Using CMAKE_PREFIX_PATH: /home/sharer/official_kortex_prime/devel;/home/sharer/rob514_ws/devel;/opt/ros/noetic
+[36m--[0m This workspace overlays: /home/sharer/official_kortex_prime/devel;/home/sharer/rob514_ws/devel;/opt/ros/noetic
+[36m--[0m Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3")
+[36m--[0m Using PYTHON_EXECUTABLE: /usr/bin/python3
+[36m--[0m Using Debian Python package layout
+[36m--[0m Using empy: /usr/lib/python3/dist-packages/em.py
+[36m--[0m Using CATKIN_ENABLE_TESTING: ON
+[36m--[0m Call enable_testing()
+[36m--[0m Using CATKIN_TEST_RESULTS_DIR: /home/sharer/official_kortex_prime/build/kortex_driver/test_results
+[36m--[0m Forcing gtest/gmock from source, though one was otherwise available.
+[36m--[0m Found gtest sources under '/usr/src/googletest': gtests will be built
+[36m--[0m Found gmock sources under '/usr/src/googletest': gmock will be built
+[36m--[0m Found PythonInterp: /usr/bin/python3 (found version "3.8.10")
+[36m--[0m Using Python nosetests: /usr/bin/nosetests3
+[36m--[0m catkin 0.8.12
+[36m--[0m BUILD_SHARED_LIBS is on
+[36m--[0m Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+[36m--[0m Generating .msg files for action kortex_driver/FollowCartesianTrajectory /home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/action/non_generated/FollowCartesianTrajectory.action
+[31m[1mCMake Error[0m at /home/sharer/official_kortex_prime/build/kortex_driver/cmake/kortex_driver-genmsg.cmake:3 (message):
+  Could not find messages which
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/srv/Inverse.srv'
+  depends on.  Did you forget to specify generate_messages(DEPENDENCIES ...)?
+
+  Cannot locate message [JointState]: unknown package [sensor_msgs] on search
+  path [{{'kortex_driver':
+  ['/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/non_generated',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/actuator_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/actuator_cyclic',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/base',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/base_cyclic',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/common',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/control_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/device_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/device_manager',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/gripper_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/gripper_cyclic',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/interconnect_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/interconnect_cyclic',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/product_configuration',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/vision_config',
+  '/home/sharer/official_kortex_prime/devel/.private/kortex_driver/share/kortex_driver/msg'],
+  'std_msgs': ['/opt/ros/noetic/share/std_msgs/cmake/../msg'],
+  'actionlib_msgs': ['/opt/ros/noetic/share/actionlib_msgs/cmake/../msg']}}]
+[36mCall Stack (most recent call first):[0m
+  /opt/ros/noetic/share/genmsg/cmake/genmsg-extras.cmake:307 (include)
+  CMakeLists.txt:70 (generate_messages)
+
+
+[36m--[0m Configuring incomplete, errors occurred!
+See also "/home/sharer/official_kortex_prime/build/kortex_driver/CMakeFiles/CMakeOutput.log".
+See also "/home/sharer/official_kortex_prime/build/kortex_driver/CMakeFiles/CMakeError.log".
+make: *** [Makefile:13316: cmake_check_build_system] Error 1

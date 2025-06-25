@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gazebo_grasp_plugin/lib/pkgconfig/gazebo_grasp_plugin.pc

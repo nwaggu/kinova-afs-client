@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/kortex_driver/share/gennodejs/ros/kortex_driver/msg/PositionCommand.js

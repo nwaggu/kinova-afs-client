@@ -1,0 +1,11 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.py.bak
+log/
+build/
+install/
+devel/
+src/CMakeLists.txt
+ros2_kortex/
+.vscode/

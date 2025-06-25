@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gazebo_msgs/share/common-lisp/ros/gazebo_msgs/srv/_package_SetPhysicsProperties.lisp

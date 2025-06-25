@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gazebo_msgs/lib/python3/dist-packages/gazebo_msgs/srv/_SetJointTrajectory.py

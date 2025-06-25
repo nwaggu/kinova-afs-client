@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gen3_robotiq_2f_140_move_it_config/share/gen3_robotiq_2f_140_move_it_config/cmake/gen3_robotiq_2f_140_move_it_configConfig.cmake

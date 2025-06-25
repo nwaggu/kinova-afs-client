@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gazebo_grasp_plugin/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig-version.cmake

@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/kortex_driver/share/kortex_driver/cmake/kortex_driver-msg-paths.cmake

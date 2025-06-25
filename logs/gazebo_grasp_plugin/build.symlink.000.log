@@ -1,0 +1,4 @@
+Symlinking /home/sharer/official_kortex_prime/devel/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig-version.cmake
+Symlinking /home/sharer/official_kortex_prime/devel/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig.cmake
+Symlinking /home/sharer/official_kortex_prime/devel/lib/libgazebo_grasp_fix.so
+Symlinking /home/sharer/official_kortex_prime/devel/lib/pkgconfig/gazebo_grasp_plugin.pc

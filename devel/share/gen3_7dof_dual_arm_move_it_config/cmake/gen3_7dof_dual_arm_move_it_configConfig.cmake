@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gen3_7dof_dual_arm_move_it_config/share/gen3_7dof_dual_arm_move_it_config/cmake/gen3_7dof_dual_arm_move_it_configConfig.cmake

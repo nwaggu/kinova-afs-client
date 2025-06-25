@@ -1,0 +1,5 @@
+ros_kortex/third_party/gazebo-pkgs/gazebo_grasp_plugin
+/home/sharer/official_kortex_prime/devel/.private/gazebo_grasp_plugin/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig-version.cmake /home/sharer/official_kortex_prime/devel/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig-version.cmake
+/home/sharer/official_kortex_prime/devel/.private/gazebo_grasp_plugin/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig.cmake /home/sharer/official_kortex_prime/devel/share/gazebo_grasp_plugin/cmake/gazebo_grasp_pluginConfig.cmake
+/home/sharer/official_kortex_prime/devel/.private/gazebo_grasp_plugin/lib/libgazebo_grasp_fix.so /home/sharer/official_kortex_prime/devel/lib/libgazebo_grasp_fix.so
+/home/sharer/official_kortex_prime/devel/.private/gazebo_grasp_plugin/lib/pkgconfig/gazebo_grasp_plugin.pc /home/sharer/official_kortex_prime/devel/lib/pkgconfig/gazebo_grasp_plugin.pc

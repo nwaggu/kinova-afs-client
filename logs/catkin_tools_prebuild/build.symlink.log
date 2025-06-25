@@ -1,0 +1,13 @@
+Symlinking /home/sharer/official_kortex_prime/devel/./setup.fish
+Symlinking /home/sharer/official_kortex_prime/devel/./env.sh
+Symlinking /home/sharer/official_kortex_prime/devel/./local_setup.zsh
+Symlinking /home/sharer/official_kortex_prime/devel/./local_setup.sh
+Symlinking /home/sharer/official_kortex_prime/devel/./local_setup.bash
+Symlinking /home/sharer/official_kortex_prime/devel/./_setup_util.py
+Symlinking /home/sharer/official_kortex_prime/devel/./local_setup.fish
+Symlinking /home/sharer/official_kortex_prime/devel/./setup.bash
+Symlinking /home/sharer/official_kortex_prime/devel/./setup.sh
+Symlinking /home/sharer/official_kortex_prime/devel/./setup.zsh
+Symlinking /home/sharer/official_kortex_prime/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig.cmake
+Symlinking /home/sharer/official_kortex_prime/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig-version.cmake
+Symlinking /home/sharer/official_kortex_prime/devel/lib/pkgconfig/catkin_tools_prebuild.pc

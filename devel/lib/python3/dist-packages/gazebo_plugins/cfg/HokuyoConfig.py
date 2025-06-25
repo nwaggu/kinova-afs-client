@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gazebo_plugins/lib/python3/dist-packages/gazebo_plugins/cfg/HokuyoConfig.py

@@ -1,0 +1,14 @@
+Symlinking /home/sharer/official_kortex_prime/devel/share/kortex_examples/cmake/kortex_examplesConfig.cmake
+Symlinking /home/sharer/official_kortex_prime/devel/share/kortex_examples/cmake/kortex_examplesConfig-version.cmake
+Symlinking /home/sharer/official_kortex_prime/devel/lib/pkgconfig/kortex_examples.pc
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_cartesian_poses_with_notifications_cpp
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_full_arm_movement_cpp
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_waypoint_action_client.py
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_vision_configuration.py
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_actuator_configuration.py
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_waypoint_action_client_cpp
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_full_arm_movement.py
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_move_it_trajectories.py
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_actuator_configuration_cpp
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_vision_configuration_cpp
+Symlinking /home/sharer/official_kortex_prime/devel/lib/kortex_examples/example_cartesian_poses_with_notifications.py

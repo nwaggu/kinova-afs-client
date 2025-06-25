@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/kortex_driver/share/common-lisp/ros/kortex_driver/msg/Action_action_parameters.lisp

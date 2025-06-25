@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/sharer/official_kortex_prime/devel/.private/gazebo_ros_pkgs/setup.sh

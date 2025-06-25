@@ -1,0 +1,4 @@
+ros_kortex/kortex_description
+/home/sharer/official_kortex_prime/devel/.private/kortex_description/share/kortex_description/cmake/kortex_descriptionConfig.cmake /home/sharer/official_kortex_prime/devel/share/kortex_description/cmake/kortex_descriptionConfig.cmake
+/home/sharer/official_kortex_prime/devel/.private/kortex_description/share/kortex_description/cmake/kortex_descriptionConfig-version.cmake /home/sharer/official_kortex_prime/devel/share/kortex_description/cmake/kortex_descriptionConfig-version.cmake
+/home/sharer/official_kortex_prime/devel/.private/kortex_description/lib/pkgconfig/kortex_description.pc /home/sharer/official_kortex_prime/devel/lib/pkgconfig/kortex_description.pc

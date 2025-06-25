@@ -1,0 +1,7 @@
+# CMake generated Testfile for 
+# Source directory: /home/sharer/official_kortex_prime/src/gazebo_ros_pkgs/gazebo_msgs
+# Build directory: /home/sharer/official_kortex_prime/build/gazebo_msgs
+# 
+# This file includes the relevant testing commands required for 
+# testing this directory and lists subdirectories to be tested as well.
+subdirs("gtest")

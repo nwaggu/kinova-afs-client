@@ -1,0 +1,33 @@
+CONAN_TARGET_PLATFORM is x86
+[31m[1mCMake Error[0m at /home/sharer/official_kortex_prime/build/kortex_driver/cmake/kortex_driver-genmsg.cmake:3 (message):
+  Could not find messages which
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/srv/Inverse.srv'
+  depends on.  Did you forget to specify generate_messages(DEPENDENCIES ...)?
+
+  Cannot locate message [JointState]: unknown package [sensor_msgs] on search
+  path [{{'kortex_driver':
+  ['/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/non_generated',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/actuator_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/actuator_cyclic',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/base',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/base_cyclic',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/common',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/control_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/device_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/device_manager',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/gripper_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/gripper_cyclic',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/interconnect_config',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/interconnect_cyclic',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/product_configuration',
+  '/home/sharer/official_kortex_prime/src/ros_kortex/kortex_driver/msg/generated/vision_config',
+  '/home/sharer/official_kortex_prime/devel/.private/kortex_driver/share/kortex_driver/msg'],
+  'std_msgs': ['/opt/ros/noetic/share/std_msgs/cmake/../msg'],
+  'actionlib_msgs': ['/opt/ros/noetic/share/actionlib_msgs/cmake/../msg']}}]
+[36mCall Stack (most recent call first):[0m
+  /opt/ros/noetic/share/genmsg/cmake/genmsg-extras.cmake:307 (include)
+  CMakeLists.txt:70 (generate_messages)
+
+
+make: *** [Makefile:13316: cmake_check_build_system] Error 1

@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/kortex_examples/lib/kortex_examples/example_actuator_configuration.py

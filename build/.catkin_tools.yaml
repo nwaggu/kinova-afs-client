@@ -1,0 +1,6 @@
+devel_space: /home/sharer/official_kortex_prime/devel
+install: false
+install_space: /home/sharer/official_kortex_prime/install
+profile: default
+source_space: /home/sharer/official_kortex_prime/src
+workspace: /home/sharer/official_kortex_prime

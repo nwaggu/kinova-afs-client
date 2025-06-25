@@ -1,0 +1,6 @@
+gazebo_ros_pkgs/gazebo_ros_control
+/home/sharer/official_kortex_prime/devel/.private/gazebo_ros_control/share/gazebo_ros_control/cmake/gazebo_ros_controlConfig-version.cmake /home/sharer/official_kortex_prime/devel/share/gazebo_ros_control/cmake/gazebo_ros_controlConfig-version.cmake
+/home/sharer/official_kortex_prime/devel/.private/gazebo_ros_control/share/gazebo_ros_control/cmake/gazebo_ros_controlConfig.cmake /home/sharer/official_kortex_prime/devel/share/gazebo_ros_control/cmake/gazebo_ros_controlConfig.cmake
+/home/sharer/official_kortex_prime/devel/.private/gazebo_ros_control/lib/libdefault_robot_hw_sim.so /home/sharer/official_kortex_prime/devel/lib/libdefault_robot_hw_sim.so
+/home/sharer/official_kortex_prime/devel/.private/gazebo_ros_control/lib/libgazebo_ros_control.so /home/sharer/official_kortex_prime/devel/lib/libgazebo_ros_control.so
+/home/sharer/official_kortex_prime/devel/.private/gazebo_ros_control/lib/pkgconfig/gazebo_ros_control.pc /home/sharer/official_kortex_prime/devel/lib/pkgconfig/gazebo_ros_control.pc

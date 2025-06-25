@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/kortex_control/share/kortex_control/cmake/kortex_controlConfig-version.cmake

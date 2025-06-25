@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/roboticsgroup_upatras_gazebo_plugins/share/roboticsgroup_upatras_gazebo_plugins/cmake/roboticsgroup_upatras_gazebo_pluginsConfig.cmake

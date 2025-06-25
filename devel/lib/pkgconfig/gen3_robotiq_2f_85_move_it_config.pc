@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/gen3_robotiq_2f_85_move_it_config/lib/pkgconfig/gen3_robotiq_2f_85_move_it_config.pc

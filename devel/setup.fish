@@ -1,0 +1,1 @@
+/home/sharer/official_kortex_prime/devel/.private/catkin_tools_prebuild/setup.fish
