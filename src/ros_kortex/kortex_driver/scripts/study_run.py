@@ -227,6 +227,7 @@ class ArmGridClient:
 
     """
     Ends Compliance Mode 
+    
     Input: Empty Request
     Returns: FindIndexResponse with the final grid [index] and [grip] differential (self.getGripperPos())
     """
@@ -246,14 +247,6 @@ class ArmGridClient:
         
         return FindIndexResponse(index, grip)
 
-
-    """
-    Gets the current ee position
-    DEPRECATED
-    """
-    def serviceGridPosition(self, req):
-        current_pose = self.ee_pose()
-        return ForwardResponse(current_pose.output.x, current_pose.output.y, current_pose.output.z)
 
 
     """
@@ -295,7 +288,7 @@ class ArmGridClient:
         self.openGripper(None)
         if current_index >= 20 or current_index==19 or current_index==14:
             self.clear_faults()
-            self.home_the_robot(identifier=10315)
+            self.take_an_action(identifier=10315)
             current_pose = self.ee_pose().output
         #Check what grid im transitioning to. 
         if current_grid==target_grid:
@@ -306,10 +299,10 @@ class ArmGridClient:
         else:
             if target_grid == 0:
                 self.clear_faults()
-                self.home_the_robot()
+                self.take_an_action()
             else:
                 self.clear_faults()
-                self.home_the_robot(identifier=10315)
+                self.take_an_action(identifier=10315)
             current_pose = self.ee_pose().output
             res = self.sendWaypoints([[current_pose.x, current_pose.y, height], [pos[0],pos[1], height], [pos[0],pos[1],pos[2]]],indicies=[0, index, index],intial_pose=(math.radians(current_pose.theta_x),math.radians(current_pose.theta_y),math.radians(current_pose.theta_z)))
             rospy.loginfo("Result:")
@@ -349,7 +342,11 @@ class ArmGridClient:
             return True
 
 
-    #GRIPPER COMMANDS
+    """
+    Get The Current Gripper State
+    Returns:
+        [Float]: Value Between 0 to 1. A message  type, True if success, False otherwise
+    """
     def getGripperPos(self):
         req = GetMeasuredGripperMovementRequest()
         req.input.mode = GripperMode.GRIPPER_POSITION
@@ -366,7 +363,13 @@ class ArmGridClient:
 
 
 
-
+    """
+    Moves Down Then Closes the Gripper, Then Moves Back Up
+    Input:
+        [requ]: Empty Request
+    Returns:
+        [TriggerResponse]: A message  type, True if success, False otherwise
+    """
     def closeGripper(self, requ):
         # Initialize the request
         # Close the gripper
@@ -392,7 +395,13 @@ class ArmGridClient:
             time.sleep(0.5)
             return TriggerResponse(True)
         
-
+    """
+    Opens the Gripper.
+    Input:
+        [requ]: Empty Request
+    Returns:
+        [TriggerResponse]: A message  type, True if success, False otherwise
+    """
     def openGripper(self, requ):
         # Initialize the request
         # Close the gripper
@@ -458,8 +467,14 @@ class ArmGridClient:
 
 
 
-    """Home The Robot with an ACTION, care for objects"""
-    def home_the_robot(self,identifier=None):
+    """Takes an action based on an identifier. If [identifier] is None. Homes the robot.
+        Note: INFERS ANY ACTION WILL TAKE 10 SECONDS, [self.last_action_notif_type] never updates
+        Input: 
+            [identifier]: integer, maps to Web App Actions, edit or export Action in Web App To View
+        Returns:
+            [bool]: Whether or not the action was successfully completed
+    """
+    def take_an_action(self,identifier=None):
         # The Home Action is used to home the robot. It cannot be deleted and is always ID #2:
         self.last_action_notif_type = None
         req = ReadActionRequest()
@@ -505,6 +520,12 @@ class ArmGridClient:
         rospy.sleep(1.0)
         return True
 
+
+
+
+    """
+    Clears any faults occuring with the system. Should be run before moving the robot anywhere.
+    """
     def example_clear_faults(self):
         try:
             self.clear_faults()
@@ -522,34 +543,51 @@ class ArmGridClient:
     
 
     """
-    Send a set of waypoints as a 2D array.
-    e.g. waypoints  = [[0.4,0.1,0.4], [0.5, 0.2, 0.2]]
+    Send a Cartesian trajectory for the arm to follow.
+    Inputs: 
+        [waypoints], a 2D array of X,Y,Z coords, e.g. waypoints  = [[0.4,0.1,0.4], [0.5, 0.2, 0.2]]
+        [indicies]: (Optional) For specificying the final angle at a posiiton based on the given index, pulls from ANGLE variable for angle
+        [initial_pose]: (Optional) Only important for the goToState function. Feeds current EE angle for smoother transitions
+
     """
     def sendWaypoints(self, waypoints, indicies=None, intial_pose=None):
         self.last_action_notif_type = None
         goal = FollowCartesianTrajectoryGoal()
+        #We keep a count for tracking the [indicies]
         count = 0
+        #For every waypoint we've asked for
         for point in waypoints:
+            #Add blending (leeway) to non-target points if needed
             if count!= len(waypoints)-1:
                 blending = 0
+            #Never add blending to the final point
             else:
                 blending = 0
 
+            #If we've specified indicies (and thus angles)
             if indicies is not None:
+                #Get the current index in the list (corresponds to the waypoint order as well)
                 index = indicies[count]
+                #In the case we have a specific intial pose and its the first waypoint 
                 if intial_pose is not None and count==0:
                     goal.trajectory.append(self.FillCartesianWaypoint(point[0],  point[1], point[2],  intial_pose[0], intial_pose[1], intial_pose[2], 0))
+                #Otherwise check that our index has a special angle requirement (in ANGLE)
                 elif angle[index] is not None: 
+                    #For indexes greater than 20, blending fails spectacularly, remove it
                     if index >= 20: blending=0
-                    #rospy.loginfo(angle[index])
+                    #Add the trajectory point to the list
                     goal.trajectory.append(self.FillCartesianWaypoint(point[0],  point[1], point[2],  angle[index][0], angle[index][1], angle[index][2], blending)) 
+                #If we have no angle requirement, we assume we can stand straight up
                 else:    
+                    #Add the trajectory point to the list
                     goal.trajectory.append(self.FillCartesianWaypoint(point[0],  point[1], point[2],  math.radians(180), 0, math.radians(90), blending))
+            #Again if we have no angle requirements, we add and stand straight up 
             else:    
                 goal.trajectory.append(self.FillCartesianWaypoint(point[0],  point[1], point[2],  math.radians(180), 0, math.radians(90), blending))
-            # goal.trajectory.append(self.FillCartesianWaypoint(0.65, 0.05,  0.45, math.radians(90), 0, math.radians(90), 0))
+            #Increment the count
             count+=1
-        # Call the service
+        
+        # Call the service, send the trajectories
         rospy.loginfo("Sending goal(Cartesian waypoint) to action server...")
         try:
             self.client.send_goal(goal)
@@ -573,13 +611,10 @@ class ArmGridClient:
 
         self.client = actionlib.SimpleActionClient('/' + self.robot_name + '/cartesian_trajectory_controller/follow_cartesian_trajectory', kortex_driver.msg.FollowCartesianTrajectoryAction)
         self.client.wait_for_server()
-
         rospy.Subscriber('joint_states', JointState, self.joint_callback)
         rospy.Service('robot/startCompliance', Forward, self.startFeedbackInformation)
         rospy.Service('robot/endCompliance', FindIndex, self.endDemoFeedback)
-        rospy.Service('robot/GridPosition', Forward, self.serviceGridPosition)
         rospy.Service('robot/SendTraj', SendState, self.trajectoryFollowing)
-
         rospy.Service('robot/goToState', SendState, self.goToState)
         rospy.Service('robot/closeGripper', Trigger, self.closeGripper)
         rospy.Service('robot/openGripper', Trigger, self.openGripper)
