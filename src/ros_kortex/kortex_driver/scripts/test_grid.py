@@ -77,8 +77,6 @@ class DiscreteGrid:
         if self.offset is None:
             return col * self.rows + row 
         else:
-            #print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            #print(col*self.rows + row + self.offset)
             return col*self.rows + row + self.offset 
 
     def get_index_from_position(self, position, clamp=True):
@@ -206,7 +204,7 @@ class DualGrid(DiscreteGrid):
         #print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         #print(grid_1,grid_2)
         if calculate_distance(self.center[0], self.center[1], x, y) < calculate_distance(self.grid_two.center[0], self.grid_two.center[1], x, y):
-            print("CLOSER TO GRID 1")
+            #print("CLOSER TO GRID 1")
             return self.get_cell_index(position, clamp=clamp)
         else:
             return self.grid_two.get_cell_index(position,clamp=clamp)
@@ -227,7 +225,7 @@ class DualGrid(DiscreteGrid):
         If clamp=False, returns None if out of bounds.
         """
         idx = self.augemented_get_cell_index(position, clamp=clamp)
-        print(idx)
+        #print(idx)
         if idx:
             return self.augemented_get_linear_index(*idx)
         return None

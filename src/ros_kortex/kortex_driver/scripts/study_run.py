@@ -26,6 +26,9 @@ from sensor_msgs.msg import JointState
 from test_grid import DiscreteGrid, DualGrid
 from test_patterns import TraversalPaths
 
+"""
+GRID AND LOCKED ANGLE SETUP
+"""
 grid = DualGrid((0.545, 0.17),(0.155,-0.725), 5, 2, (-0.87, 0.211),(-0.284, -0.684), 3)
 #print("Cell Heigh",grid.grid_two.cell_height)
 #print("Cell Width", grid.grid_two.cell_width)
@@ -43,6 +46,7 @@ grid = DualGrid((0.545, 0.17),(0.155,-0.725), 5, 2, (-0.87, 0.211),(-0.284, -0.6
 #             24:[math.radians(-86.4), math.radians(-168.5) ,math.radians(129.2)]
 #           }
 
+
 GRID_POS = grid.to_dict_fix(height=0.1)
 GRID_POS[24] = [-0.769, -0.636, 0.247]
 update_grid = {
@@ -59,11 +63,11 @@ update_grid = {
 
 }
 
-angle={}
+ANGLE={}
 for i in range(len(GRID_POS)):
     if i in update_grid:
         GRID_POS[i] = [GRID_POS.get(i)[0], GRID_POS.get(i)[1], update_grid.get(i)]
-    angle[i] = None
+    ANGLE[i] = None
 update = {4:[math.radians(133), math.radians(-8.47) ,math.radians(6)], 3:[math.radians(157), 0 ,math.radians(4.7)] , 
           8:[math.radians(173), math.radians(8.4) ,math.radians(36)], 9:[math.radians(157), 0 ,math.radians(4.7)], 
           
@@ -79,12 +83,8 @@ update = {4:[math.radians(133), math.radians(-8.47) ,math.radians(6)], 3:[math.r
           }
 
 for key in update:
-    angle[key] = update[key]
+    ANGLE[key] = update[key]
 
-print(angle)
-
-print(GRID_POS)
-#GRID_POS = [[0.35000000000000003, -0.24, 0.2], [0.35000000000000003, -0.12, 0.2], [0.35000000000000003, 0.0, 0.2], [0.35000000000000003, 0.12, 0.2], [0.35000000000000003, 0.24000000000000005, 0.2], [0.6500000000000001, -0.24, 0.2], [0.6500000000000001, -0.12, 0.2], [0.6500000000000001, 0.0, 0.2], [0.6500000000000001, 0.12, 0.2], [0.6500000000000001, 0.24000000000000005, 0.2]]
 rospy.loginfo("Complete GRID setup")
 
 class Action(Enum):
@@ -225,13 +225,14 @@ class ArmGridClient:
         
         return ForwardResponse(0, 0, 0)
 
-    """
-    Ends Compliance Mode 
-    
-    Input: Empty Request
-    Returns: FindIndexResponse with the final grid [index] and [grip] differential (self.getGripperPos())
-    """
+
     def endDemoFeedback(self, req):
+        """
+        Ends Compliance Mode 
+        
+        Input: Empty Request
+        Returns: FindIndexResponse with the final grid [index] and [grip] differential (self.getGripperPos())
+        """
         grip = 0
         try:
             if (self.last_gripper_pos - round(self.getGripperPos(),1)) > 0.1:
@@ -249,10 +250,15 @@ class ArmGridClient:
 
 
 
-    """
-    
-    """
+
     def trajectoryFollowing(self, req):
+        """
+        Service For Sending Trajectories
+        Input: 
+            [SendState]: Srv Object
+        Returns:
+            [SendStateResponse]: Whether or not the trajectories succeeded.
+        """
         indexes = list(req.indicies)
         rospy.loginfo(indexes)
         #grid.visualize(path_points=indexes)
@@ -270,32 +276,44 @@ class ArmGridClient:
         return SendStateResponse(True)
 
 
-    """
-    Move to requested position [x,y,z]
-    """
+
     def goToState(self, req):
-        rospy.loginfo("Sending current request:")
-        rospy.loginfo(req)
+        """
+        Move to requested position [x,y,z]
+        """
+        #Get the current position 
         current_pose = self.ee_pose().output
         height = 0.35
+
+        #Extract the desired index position
         index = list(req.indicies)[0]
+        #Convert index to position
         pos=GRID_POS.get(index)
+        #Get the current grid index the EE is in 
         current_index = grid.augmented_get_index_from_position([current_pose.x, current_pose.y])
 
+        #Check what grid each location is closest to
         current_grid = grid.checkDistance(current_pose.x, current_pose.y)
         target_grid =  grid.checkDistance(pos[0],pos[1])
         
+        #Open the Gripper
         self.openGripper(None)
+
+        #If Index >=20 or 19 or 14, reset to home position before moving
         if current_index >= 20 or current_index==19 or current_index==14:
             self.clear_faults()
             self.take_an_action(identifier=10315)
             current_pose = self.ee_pose().output
-        #Check what grid im transitioning to. 
+        #If we're on the correct grid, move the EE up to [height] and move to the position, then move back down
         if current_grid==target_grid:
-            res = self.sendWaypoints([[current_pose.x, current_pose.y, height], [pos[0],pos[1], height], [pos[0],pos[1],pos[2]]],indicies=[0, index, index], intial_pose=(math.radians(current_pose.theta_x),math.radians(current_pose.theta_y),math.radians(current_pose.theta_z)))
+            res = self.sendWaypoints([[current_pose.x, current_pose.y, height], [pos[0],pos[1], height], 
+                                      [pos[0],pos[1],pos[2]]],indicies=[0, index, index], 
+                                      intial_pose=(math.radians(current_pose.theta_x),math.radians(current_pose.theta_y),
+                                                   math.radians(current_pose.theta_z)))
             rospy.loginfo("Result:")
             rospy.loginfo(res)
         
+        #If we're NOT on the correct grid, align to the correct grid before moving
         else:
             if target_grid == 0:
                 self.clear_faults()
@@ -304,56 +322,30 @@ class ArmGridClient:
                 self.clear_faults()
                 self.take_an_action(identifier=10315)
             current_pose = self.ee_pose().output
-            res = self.sendWaypoints([[current_pose.x, current_pose.y, height], [pos[0],pos[1], height], [pos[0],pos[1],pos[2]]],indicies=[0, index, index],intial_pose=(math.radians(current_pose.theta_x),math.radians(current_pose.theta_y),math.radians(current_pose.theta_z)))
+            res = self.sendWaypoints([[current_pose.x, current_pose.y, height], [pos[0],pos[1], height], 
+                                      [pos[0],pos[1],pos[2]]],indicies=[0, index, index],
+                                      intial_pose=(math.radians(current_pose.theta_x),math.radians(current_pose.theta_y),
+                                                   math.radians(current_pose.theta_z)))
             rospy.loginfo("Result:")
             rospy.loginfo(res)
 
         return SendStateResponse(True)
-    
-
-    """
-    Sends a set of actions (see enum above) to the arm
-    """
-    def sendActions(self, actions):
-        self.last_action_notif_type = None
-        goal = FollowCartesianTrajectoryGoal()
-        current_pose = self.ee_pose()
-        for act in actions:
-            assert(isinstance(act, Action))
-            displacement = act.value
-            new_pose = Pose()
-            new_pose = copy.deepcopy(current_pose)
-            new_pose.x += displacement[0]
-            new_pose.y += displacement[1]
-            new_pose.z += displacement[2]
-            goal.trajectory.append(self.FillCartesianWaypoint(new_pose.x,  new_pose.y, new_pose.z,  0, 0, 0, 1))
-            current_pose = new_pose
-            # goal.trajectory.append(self.FillCartesianWaypoint(0.65, 0.05,  0.45, math.radians(90), 0, math.radians(90), 0))
-
-        # Call the service
-        rospy.loginfo("Sending goal(Cartesian waypoint) to action server...")
-        try:
-            self.client.send_goal(goal)
-        except rospy.ServiceException:
-            rospy.logerr("Failed to send goal.")
-            return False
-        else:
-            self.client.wait_for_result()
-            return True
 
 
-    """
-    Get The Current Gripper State
-    Returns:
-        [Float]: Value Between 0 to 1. A message  type, True if success, False otherwise
-    """
+
     def getGripperPos(self):
+        """
+        Get The Current Gripper State
+        Returns:
+            [Float]: Value Between 0 to 1, 1 is closed, 0 is open. -99 if invalid
+        """
         req = GetMeasuredGripperMovementRequest()
         req.input.mode = GripperMode.GRIPPER_POSITION
         try:
             msg = self.get_gripper(req)
         except:
             rospy.logerr("Failed To Get Gripper Information")
+            return -99
         
         gripper = msg.output 
         gripper_pos = gripper.finger[0].value
@@ -363,14 +355,15 @@ class ArmGridClient:
 
 
 
-    """
-    Moves Down Then Closes the Gripper, Then Moves Back Up
-    Input:
-        [requ]: Empty Request
-    Returns:
-        [TriggerResponse]: A message  type, True if success, False otherwise
-    """
+
     def closeGripper(self, requ):
+        """
+        Moves Down Then Closes the Gripper, Then Moves Back Up
+        Input:
+            [requ]: Empty Request
+        Returns:
+            [TriggerResponse]: A message  type, True if success, False otherwise
+        """
         # Initialize the request
         # Close the gripper
         req = SendGripperCommandRequest()
@@ -395,14 +388,15 @@ class ArmGridClient:
             time.sleep(0.5)
             return TriggerResponse(True)
         
-    """
-    Opens the Gripper.
-    Input:
-        [requ]: Empty Request
-    Returns:
-        [TriggerResponse]: A message  type, True if success, False otherwise
-    """
+
     def openGripper(self, requ):
+        """
+        Opens the Gripper.
+        Input:
+            [requ]: Empty Request
+        Returns:
+            [TriggerResponse]: A message  type, True if success, False otherwise
+        """
         # Initialize the request
         # Close the gripper
         req = SendGripperCommandRequest()
@@ -425,17 +419,19 @@ class ArmGridClient:
             return TriggerResponse(True)
     
 
-    """
-    Callback action topic
-    """
+
     def cb_action_topic(self, notif):
+        """
+        Callback action topic
+        """
         self.last_action_notif_type = notif.action_event
         rospy.loginfo(self.last_action_notif_type)
 
-    """
-    Wait script for some actions
-    """
+
     def wait_for_action_end_or_abort(self):
+        """
+        Wait script for some actions
+        """
         while not rospy.is_shutdown():
             if (self.last_action_notif_type == ActionEvent.ACTION_END):
                 rospy.loginfo("Received ACTION_END notification")
@@ -449,10 +445,11 @@ class ArmGridClient:
                 return True
 
 
-    """
-    Creates a new point for Cartesian planner
-    """
+
     def FillCartesianWaypoint(self, new_x, new_y, new_z, new_theta_x, new_theta_y, new_theta_z, blending_radius):
+        """
+        Creates a new point for Cartesian planner
+        """
         cartesianWaypoint = CartesianWaypoint()
         cartesianWaypoint.pose.x = new_x
         cartesianWaypoint.pose.y = new_y
@@ -467,14 +464,16 @@ class ArmGridClient:
 
 
 
-    """Takes an action based on an identifier. If [identifier] is None. Homes the robot.
+
+    def take_an_action(self,identifier=None):
+        """
+        Takes an action based on an identifier. If [identifier] is None. Homes the robot.
         Note: INFERS ANY ACTION WILL TAKE 10 SECONDS, [self.last_action_notif_type] never updates
         Input: 
             [identifier]: integer, maps to Web App Actions, edit or export Action in Web App To View
         Returns:
             [bool]: Whether or not the action was successfully completed
-    """
-    def take_an_action(self,identifier=None):
+        """
         # The Home Action is used to home the robot. It cannot be deleted and is always ID #2:
         self.last_action_notif_type = None
         req = ReadActionRequest()
@@ -502,10 +501,11 @@ class ArmGridClient:
             else:
                 return self.wait_for_action_end_or_abort()
             
-    """
-    Can be used to guage severity of warnings for ACTIONS (web app)
-    """
+
     def subscribe_to_a_robot_notification(self):
+        """
+        Can be used to guage severity of warnings for ACTIONS (web app)
+        """
         # Activate the publishing of the ActionNotification
         req = OnNotificationActionTopicRequest()
         rospy.loginfo("Activating the action notifications...")
@@ -523,10 +523,11 @@ class ArmGridClient:
 
 
 
-    """
-    Clears any faults occuring with the system. Should be run before moving the robot anywhere.
-    """
+
     def example_clear_faults(self):
+        """
+        Clears any faults occuring with the system. Should be run before moving the robot anywhere.
+        """
         try:
             self.clear_faults()
         except rospy.ServiceException:
@@ -572,11 +573,11 @@ class ArmGridClient:
                 if intial_pose is not None and count==0:
                     goal.trajectory.append(self.FillCartesianWaypoint(point[0],  point[1], point[2],  intial_pose[0], intial_pose[1], intial_pose[2], 0))
                 #Otherwise check that our index has a special angle requirement (in ANGLE)
-                elif angle[index] is not None: 
+                elif ANGLE[index] is not None: 
                     #For indexes greater than 20, blending fails spectacularly, remove it
                     if index >= 20: blending=0
                     #Add the trajectory point to the list
-                    goal.trajectory.append(self.FillCartesianWaypoint(point[0],  point[1], point[2],  angle[index][0], angle[index][1], angle[index][2], blending)) 
+                    goal.trajectory.append(self.FillCartesianWaypoint(point[0],  point[1], point[2],  ANGLE[index][0], ANGLE[index][1], ANGLE[index][2], blending)) 
                 #If we have no angle requirement, we assume we can stand straight up
                 else:    
                     #Add the trajectory point to the list
@@ -607,7 +608,7 @@ class ArmGridClient:
             pass
         
         success &= self.example_clear_faults()
-        #self.home_the_robot(10314)
+        self.take_an_action(10314)
 
         self.client = actionlib.SimpleActionClient('/' + self.robot_name + '/cartesian_trajectory_controller/follow_cartesian_trajectory', kortex_driver.msg.FollowCartesianTrajectoryAction)
         self.client.wait_for_server()
@@ -625,13 +626,12 @@ class ArmGridClient:
 
         if not success:
             rospy.logerr("The example encountered an error.")
+        
         #path = grid.generate_zigzag_path()
         ss = SendState()
-        list_test = [6]
-        for i in range(9):
-            ss.indicies = [list_test[i]]
-            self.goToState(ss)
-            time.sleep(8)
+        ss.indicies = [17]
+        self.goToState(ss)
+        #time.sleep(8)
         # list_test = [20, 15, 10, 11, 16, 21, 22, 17, 12, 13, 18,23, 24,19,14, 9, 4, 3, 8, 7, 2, 1, 6,5,0]
         # list_test.reverse()
         # ss.indicies = list_test
