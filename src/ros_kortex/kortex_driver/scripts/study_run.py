@@ -46,6 +46,8 @@ grid = DualGrid((0.545, 0.17),(0.155,-0.725), 5, 2, (-0.87, 0.211),(-0.284, -0.6
 #             24:[math.radians(-86.4), math.radians(-168.5) ,math.radians(129.2)]
 #           }
 
+in_between_5_10 = [0.039, 0.35, 0.1, math.radians(166),math.radians(-7.2),math.radians(176)]
+in_between_6_11 = [0, -0.3, 0.118, math.radians(-175),math.radians(-2.9),math.radians(41.6)]
 
 GRID_POS = grid.to_dict_fix(height=0.1)
 GRID_POS[24] = [-0.769, -0.636, 0.247]
@@ -79,8 +81,15 @@ update = {4:[math.radians(133), math.radians(-8.47) ,math.radians(6)], 3:[math.r
             24:[math.radians(-86.4), math.radians(-168.5) ,math.radians(129.2)],
             23:[math.radians(-104), math.radians(3) ,math.radians(113)],
             17:[math.radians(-180), math.radians(3.2) ,math.radians(100)],
-            10:[math.radians(169.7), math.radians(-5.4) ,math.radians(89)]
+            10:[math.radians(169.7), math.radians(-5.4) ,math.radians(89)],
+            98:[math.radians(166),math.radians(-7.2),math.radians(176)],
+            99:[math.radians(-175),math.radians(-2.9),math.radians(41.6)]
           }
+
+GRID_POS[98] = [0.039, 0.35, 0.1]
+GRID_POS[99] = [0, -0.3, 0.118]
+
+
 
 for key in update:
     ANGLE[key] = update[key]
@@ -266,13 +275,27 @@ class ArmGridClient:
 
         waypoints = []
         #Loop through indicies until we've reached every point
+        copy_index = copy.deepcopy(indexes)
+        prev_index = 0
+        offset = 0
+
         if len(indexes)!=0:
-            for i in indexes:
-                print(i)
-                waypoints.append(GRID_POS.get(i))
-                rospy.loginfo(GRID_POS.get(i))
+            for i in range(len(indexes)):
+                current_index = indexes[i] 
+                if prev_index == 5 and current_index == 10 or prev_index == 10 and current_index == 5 :
+                    waypoints.append(GRID_POS.get(98))
+                    copy_index.insert(i+offset,98)
+                    offset+=1
+                if prev_index == 6 and current_index == 11 or prev_index == 11 and current_index == 6 :
+                    waypoints.append(GRID_POS.get(99))
+                    copy_index.insert(i+offset,99)
+                    offset+=1
+
+                waypoints.append(GRID_POS.get(indexes[i]))
+                #rospy.loginfo(GRID_POS.get(i))
+                prev_index = indexes[i]
             rospy.loginfo(waypoints)
-            self.sendWaypoints(waypoints,indicies=indexes)
+            self.sendWaypoints(waypoints,indicies=copy_index)
         return SendStateResponse(True)
 
 
@@ -628,14 +651,15 @@ class ArmGridClient:
             rospy.logerr("The example encountered an error.")
         
         #path = grid.generate_zigzag_path()
-        ss = SendState()
-        ss.indicies = [17]
-        self.goToState(ss)
-        #time.sleep(8)
-        # list_test = [20, 15, 10, 11, 16, 21, 22, 17, 12, 13, 18,23, 24,19,14, 9, 4, 3, 8, 7, 2, 1, 6,5,0]
-        # list_test.reverse()
-        # ss.indicies = list_test
-        # #rospy.loginfo(ss.indicies)
+        # ss = SendState()
+        # #ss.indicies = [11]
+        # #self.goToState(ss)
+        # ss.indicies = [5,10,5,6,11,6]
+        # #time.sleep(8)
+        # # list_test = [20, 15, 10, 11, 16, 21, 22, 17, 12, 13, 18,23, 24,19,14, 9, 4, 3, 8, 7, 2, 1, 6,5,0]
+        # # list_test.reverse()
+        # # ss.indicies = list_test
+        # # #rospy.loginfo(ss.indicies)
         # self.trajectoryFollowing(ss)
         #trig = Trigger
         #self.closeGripper()
