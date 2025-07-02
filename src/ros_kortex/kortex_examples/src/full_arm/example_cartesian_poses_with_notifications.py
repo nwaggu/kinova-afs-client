@@ -163,6 +163,9 @@ class ExampleCartesianActionsWithNotifications:
             #*******************************************************************************
             
             #*******************************************************************************
+            # Subscribe to ActionNotification's from the robot to know when a cartesian pose is finished
+            success &= self.example_subscribe_to_a_robot_notification()
+            
             # Start the example from the Home position
             success &= self.example_home_the_robot()
             #*******************************************************************************
@@ -172,8 +175,7 @@ class ExampleCartesianActionsWithNotifications:
             success &= self.example_set_cartesian_reference_frame()
 
             #*******************************************************************************
-            # Subscribe to ActionNotification's from the robot to know when a cartesian pose is finished
-            success &= self.example_subscribe_to_a_robot_notification()
+
 
             #*******************************************************************************
             # Prepare and send pose 1

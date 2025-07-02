@@ -56,11 +56,14 @@ update_grid = {
     18:0.38,
     19: 0.33,
     23: 0.33,
-    17:0.2, #104
+    17:0.25, #104
     10:0.3,
     7:0.169,
     6:0.169,
-    5:0.169
+    5:0.169,
+    11:0.27,
+    15:0.3,
+    12:0.25
 
 }
 
@@ -79,7 +82,7 @@ update = {4:[math.radians(133), math.radians(-8.47) ,math.radians(6)], 3:[math.r
           13:[math.radians(163), math.radians(6) ,math.radians(30)], 18:[math.radians(-162), math.radians(-80) ,math.radians(158)],
             24:[math.radians(-86.4), math.radians(-168.5) ,math.radians(129.2)],
             23:[math.radians(-162), math.radians(-80) ,math.radians(158)],
-            17:[math.radians(-180), math.radians(3.2) ,math.radians(100)],
+            17:[math.radians(-180), math.radians(0) ,math.radians(90)],
             10:[math.radians(169.7), math.radians(-5.4) ,math.radians(89)],
             95:[math.radians(-3.7), math.radians(-118) ,math.radians(1.77)], 
             96:[math.radians(-3.7), math.radians(-118) ,math.radians(1.77)],
@@ -92,8 +95,8 @@ GRID_POS[95] = [-0.409, -0.561, 0.38]
 GRID_POS[96] = [-0.322, -0.396, 0.397]
 GRID_POS[97] = copy.deepcopy(GRID_POS[17])
 GRID_POS[97][2] = 0.3
-GRID_POS[98] = [0.039, 0.35, 0.1]
-GRID_POS[99] = [0, -0.3, 0.118]
+GRID_POS[98] = [0.039, 0.35, 0.18]
+GRID_POS[99] = [0, -0.3, 0.19]
 
 
 
@@ -337,9 +340,13 @@ class ArmGridClient:
                         offset+=1
 
                     if current_index in pickupLocations.keys():
+                        #print("Conversions: ", GRID_POS.get(pickupLocations.get(current_index)))
                         waypoints.append(GRID_POS.get(pickupLocations.get(current_index)))
                         prev_index = pickupLocations.get(current_index)
-                        copy_index[i] = pickupLocations.get(current_index)
+                        #rospy.loginfo(copy_index)
+                        copy_index[i+offset] = pickupLocations.get(current_index)
+                        #rospy.loginfo("update")
+                        #rospy.loginfo(copy_index)
                     else:
                         waypoints.append(GRID_POS.get(current_index))
                         prev_index = segment[i]
@@ -354,7 +361,9 @@ class ArmGridClient:
                 rospy.loginfo(current_index)
                 if current_index == 101 or current_index ==103:
                     self.openGripper(None)
-                elif current_index == 100 or current_index ==102:
+                elif current_index == 100:
+                    self.pickUp(distance=1)
+                elif current_index == 102:
                     self.pickUp(None)
 
                 
@@ -374,52 +383,57 @@ class ArmGridClient:
         height = 0.35
 
         #Extract the desired index position
-        index = list(req.indicies)[0]
+        target_index = list(req.indicies)[0]
         #Convert index to position
-        pos=GRID_POS.get(index)
+        pos=GRID_POS.get(target_index)
         #Get the current grid index the EE is in 
         current_index = grid.augmented_get_index_from_position([current_pose.x, current_pose.y])
-
-        #Check what grid each location is closest to
-        current_grid = grid.checkDistance(current_pose.x, current_pose.y)
-        target_grid =  grid.checkDistance(pos[0],pos[1])
         
         #Open the Gripper
         self.openGripper(None)
 
-        #If Index >=20 or 19 or 14, reset to home position before moving
+        # #If Index >=20 or 19 or 14, reset to home position before moving
         if current_index >= 20 or current_index==19 or current_index==14:
             self.clear_faults()
             self.take_an_action(identifier=10315)
             current_pose = self.ee_pose().output
+            current_index = grid.augmented_get_index_from_position([current_pose.x, current_pose.y])
+        
         #If we're on the correct grid, move the EE up to [height] and move to the position, then move back down
-        if current_grid==target_grid:
+        if current_index<=9 and target_index<= 9 or current_index>9 and target_index>9:
+            self.clear_faults()
             res = self.sendWaypoints([[current_pose.x, current_pose.y, height], [pos[0],pos[1], height], 
-                                      [pos[0],pos[1],pos[2]]],indicies=[0, index, index], 
+                                      [pos[0],pos[1],pos[2]]],indicies=[0, target_index, target_index], 
                                       intial_pose=(math.radians(current_pose.theta_x),math.radians(current_pose.theta_y),
                                                    math.radians(current_pose.theta_z)))
             rospy.loginfo("Result:")
             rospy.loginfo(res)
         
-        #If we're NOT on the correct grid, align to the correct grid before moving
+        # #If we're NOT on the correct grid, align to the correct grid before moving
         else:
-            if target_grid == 0:
-                self.clear_faults()
-                self.take_an_action(10315)
+            if current_index<=9:
                 self.clear_faults()
                 self.take_an_action()
             else:
                 self.clear_faults()
+                self.take_an_action(10315)
+            
+            if target_index<=9:
+                self.clear_faults()
                 self.take_an_action()
+            else:
                 self.clear_faults()
                 self.take_an_action(identifier=10315)
+            
+            rospy.loginfo("Result:")
+            rospy.loginfo(target_index)
+            rospy.loginfo(current_index)
             current_pose = self.ee_pose().output
             res = self.sendWaypoints([[current_pose.x, current_pose.y, height], [pos[0],pos[1], height], 
-                                      [pos[0],pos[1],pos[2]]],indicies=[0, index, index],
-                                      intial_pose=(math.radians(current_pose.theta_x),math.radians(current_pose.theta_y),
-                                                   math.radians(current_pose.theta_z)))
-            rospy.loginfo("Result:")
-            rospy.loginfo(res)
+                                        [pos[0],pos[1],pos[2]]],indicies=[0, target_index, target_index],
+                                        intial_pose=(math.radians(current_pose.theta_x),math.radians(current_pose.theta_y),
+                                                    math.radians(current_pose.theta_z)))
+
         
         gripper_index = list(req.indicies)[1]
         if gripper_index:
@@ -451,7 +465,7 @@ class ArmGridClient:
         return gripper_pos
 
 
-    def pickUp(self, requ):
+    def pickUp(self, distance=None):
         """
         Moves Down Then Closes the Gripper, Then Moves Back Up
         Input:
@@ -471,9 +485,14 @@ class ArmGridClient:
         rospy.loginfo("Sending the gripper command...")
         current_pose = self.ee_pose().output
         # Call the service 
+        if distance is not None:
+            dist = 0.18
+        else:
+            dist = 0.125
+
         try:
             index = grid.augmented_get_index_from_position([current_pose.x,current_pose.y])
-            self.sendWaypoints([[current_pose.x,current_pose.y,current_pose.z-0.075]], indicies=[index])
+            self.sendWaypoints([[current_pose.x,current_pose.y,current_pose.z-dist]], indicies=[index])
             self.send_gripper(req)
             self.sendWaypoints([[current_pose.x,current_pose.y,current_pose.z]], indicies=[index])
         except rospy.ServiceException:
@@ -551,6 +570,7 @@ class ArmGridClient:
         Callback action topic
         """
         self.last_action_notif_type = notif.action_event
+        rospy.loginfo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         rospy.loginfo(self.last_action_notif_type)
 
 
@@ -566,9 +586,7 @@ class ArmGridClient:
                 rospy.loginfo("Received ACTION_ABORT notification")
                 return False
             else:
-                #rospy.loginfo("stuck????")
-                time.sleep(10)
-                return True
+                time.sleep(0.01)
 
 
 
@@ -618,6 +636,7 @@ class ArmGridClient:
             # What we just read is the input of the ExecuteAction service
             req = ExecuteActionRequest()
             req.input = res.output
+            req.input.handle.action_type = ActionType.REACH_POSE
             rospy.loginfo("Sending the robot home...")
             try:
                 self.execute_action(req)
@@ -688,7 +707,7 @@ class ArmGridClient:
         for point in waypoints:
             #Add blending (leeway) to non-target points if needed
             if count!= len(waypoints)-1:
-                blending = 0
+                blending = 0.003
             #Never add blending to the final point
             else:
                 blending = 0
@@ -739,17 +758,19 @@ class ArmGridClient:
             pass
         
         success &= self.example_clear_faults()
+        self.subscribe_to_a_robot_notification()
         self.take_an_action(10315)
 
         self.client = actionlib.SimpleActionClient('/' + self.robot_name + '/cartesian_trajectory_controller/follow_cartesian_trajectory', kortex_driver.msg.FollowCartesianTrajectoryAction)
         self.client.wait_for_server()
+
         rospy.Subscriber('joint_states', JointState, self.joint_callback)
         rospy.Service('robot/startCompliance', Forward, self.startFeedbackInformation)
         rospy.Service('robot/endCompliance', FindIndex, self.endDemoFeedback)
         rospy.Service('robot/SendTraj', SendState, self.trajectoryFollowing)
         rospy.Service('robot/goToState', SendState, self.goToState)
-        rospy.Service('robot/closeGripper', Trigger, self.pickUp)
-        rospy.Service('robot/openGripper', Trigger, self.openGripper)
+        #rospy.Service('robot/closeGripper', Trigger, self.pickUp)
+        #rospy.Service('robot/openGripper', Trigger, self.openGripper)
         rospy.loginfo("All Services Setup.")
         
         # For testing purposes
@@ -762,18 +783,37 @@ class ArmGridClient:
         #path = grid.generate_zigzag_path()
         ss = SendState()
         
-        ss.indicies = [17, 0]
+        ss.indicies = [15, 0]
         self.goToState(ss)
+        # ss.indicies = [2, 0]
+        # self.goToState(ss)
+        # ss.indicies = [6, 0]
+        # self.goToState(ss)
+        # ss.indicies = [13, 1]
+        # self.goToState(ss)
+        # ss.indicies = [15, 1]
+        # self.goToState(ss)
+        # ss.indicies = [7, 0]
+        # self.goToState(ss)
+        # ss.indicies = [16, 0]
+        # self.goToState(ss)
+        # ss.indicies = [23, 0]
+        # self.goToState(ss)
+        # ss.indicies = [0, 1]
+        # self.goToState(ss)
+        #ss.indicies = [2, 0]
+        #self.goToState(ss)
 
-        #ss.indicies = [101, 18,19, 23,18, 13,18, 19, 14, 9, 4]
-        # #time.sleep(8)
-        # # list_test = [20, 15, 10, 11, 16, 21, 22, 17, 12, 13, 18,23, 24,19,14, 9, 4, 3, 8, 7, 2, 1, 6,5,0]
-        # # list_test.reverse()
-        # # ss.indicies = list_test
-        #rospy.loginfo(ss.indicies)
-        #self.pickUp(None)
-        #ss.indicies = [17,18, 19, 23, 18, 13,14,9, 4]
-        #self.trajectoryFollowing(ss)
+        ss.indicies = [16,11,16,11,10,11,6,5,9,4,14,19,24,19,18,17,16,15,10,5,0,1]
+        # # #time.sleep(8)
+        # # # list_test = [20, 15, 10, 11, 16, 21, 22, 17, 12, 13, 18,23, 24,19,14, 9, 4, 3, 8, 7, 2, 1, 6,5,0]
+        # # # list_test.reverse()
+        # # # ss.indicies = list_test
+        # #rospy.loginfo(ss.indicies)
+        # self.pickUp(None)
+        # ss.indicies = [16,15,10,11,10]
+        self.trajectoryFollowing(ss)
+        # self.openGripper(None)
         #trig = Trigger
         #self.closeGripper()
         rospy.spin()
