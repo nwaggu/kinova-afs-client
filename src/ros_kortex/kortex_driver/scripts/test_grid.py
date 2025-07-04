@@ -49,7 +49,7 @@ class DiscreteGrid:
     def get_cell_center(self, row, col):
         x = self.max_corner[0] - (col + 0.5) * self.cell_width
         y = self.max_corner[1] - (row + 0.5) * self.cell_height
-        return (x, y)
+        return [x, y]
 
     def get_cell_index(self, position, clamp=True):
         """
@@ -241,7 +241,7 @@ class DualGrid(DiscreteGrid):
             temp = {}
             for  i in range(self.rows):
                 for j in range(self.cols+self.grid_two.cols):
-                        temp[self.augemented_get_linear_index(i,j)] = self.augmented_get_cell_center(i,j) + (height,)
+                        temp[self.augemented_get_linear_index(i,j)] = self.augmented_get_cell_center(i,j) + [height]
             self.dict = copy.deepcopy(temp) 
         return self.dict
 
